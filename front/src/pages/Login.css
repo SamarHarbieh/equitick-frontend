@@ -30,6 +30,10 @@ main {
   padding: 0;
 }
 
+.login-title {
+  color: white;
+}
+
 .login-form {
   background-color: white;
   width: 450px;

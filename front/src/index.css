@@ -4,7 +4,8 @@
   --primary-font-family: 'Poppins', sans-serif;
   --primary-color: #1d5191;
   --secondary-color: #4993ee;
-  --tertiary-color: #040720;
+  /* --tertiary-color: #040720; */
+  --tertiary-color: #080d36;
 }
 * {
   margin: 0;
@@ -14,4 +15,5 @@
 
 html {
   font-family: var(--primary-font-family);
+  overflow-x: hidden;
 }

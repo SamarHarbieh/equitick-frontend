@@ -20,13 +20,70 @@ h1 {
 
 table {
   width: 100%;
+  border-collapse: collapse;
 }
 
-.table-header {
-  border: 1px solid red;
-  background-color: green;
+th {
+  padding: 0.8rem;
+  font-size: 1.2rem;
 }
 
-tr {
-  border-bottom: 1px solid black;
+table tr:nth-child(1) {
+  /* border-bottom: 1px solid var(--tertiary-color); */
+  box-shadow: 0px 0px 36px 15px rgba(155, 152, 152, 0.28);
+}
+
+td {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.react-paginate-container {
+  margin: 1.5rem 0;
+  min-width: 700px;
+  /* background-color: var(--secondary-color); */
+  color: var(--tertiary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  height: 75px;
+}
+
+.react-paginate-container ul {
+  display: flex;
+  list-style: none;
+}
+
+.react-paginate-container ul li {
+  margin: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-self: center;
+  justify-content: center;
+}
+
+.page-link {
+  padding: 6px 12px;
+}
+
+.page-link:hover {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.active-page-item {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.previous-link,
+.next-link {
+  transition: all 0.2s;
+}
+
+.previous-link:hover,
+.next-link:hover {
+  color: var(--secondary-color);
 }

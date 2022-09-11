@@ -14,7 +14,7 @@ const Home = () => {
   // following the API or data you're working with.
   const [itemOffset, setItemOffset] = useState(0);
   const ctx = useContext(AuthContext);
-  const fetchTrades = async () => {
+  const fetchTrades = async (page) => {
     ctx.setIsLoading(true);
     const requestOptions = {};
     let token = localStorage.getItem('token')
@@ -29,7 +29,7 @@ const Home = () => {
     requestOptions.headers = headers;
 
     let fetchURL;
-    fetchURL = 'http://localhost:8000/api/trades';
+    fetchURL = `http://localhost:8000/api/trades?page=${page}`;
 
     try {
       const response = await fetch(fetchURL, requestOptions);
@@ -48,15 +48,16 @@ const Home = () => {
   };
 
   useEffect(() => {
-    // Fetch items from another resources.
-    fetchTrades();
+    fetchTrades(1);
   }, []);
 
   if (ctx.isLoggedIn === false) {
     return <Navigate to='/login' />;
   }
 
-  const handlePageClick = (event) => {};
+  const handlePageClick = (event) => {
+    fetchTrades(event.selected + 1);
+  };
 
   return (
     <>
@@ -65,33 +66,61 @@ const Home = () => {
         <h1>Trades</h1>
         <div className='table-container'>
           <table>
-            <tr className='table-header'>
-              <th>Login</th>
-              <th>Action</th>
-              <th>Entry</th>
-              <th>Time</th>
-              <th>Symbol</th>
-              <th>Price</th>
-              <th>Profit</th>
-              <th>Volume</th>
-            </tr>
+            <thead>
+              <tr className='table-header'>
+                <th>Deal</th>
+                <th>Login</th>
+                <th>Action</th>
+                <th>Entry</th>
+                <th>Time</th>
+                <th>Symbol</th>
+                <th>Price</th>
+                <th>Profit</th>
+                <th>Volume</th>
+              </tr>
+            </thead>
             {currentItems &&
               currentItems.map((item) => (
-                <tr>
-                  <td>test</td>
+                <tr key={item.Deal}>
+                  <td>{item.Deal}</td>
+                  <td>{item.Login}</td>
+                  <td>{item.Action}</td>
+                  <td>{item.Entry}</td>
+                  <td>{item.Time}</td>
+                  <td>{item.Symbol}</td>
+                  <td>{item.Price}</td>
+                  <td
+                    style={{
+                      color:
+                        item.Profit > 0
+                          ? '#004D00'
+                          : item.Profit < 0
+                          ? '#F70000'
+                          : 'var(--tertiary-color)',
+                    }}
+                  >
+                    {item.Profit}
+                  </td>
+                  <td>{item.Volume}</td>
                 </tr>
               ))}
           </table>
         </div>
-        <ReactPaginate
-          breakLabel='...'
-          nextLabel='next >'
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
-          pageCount={pageCount}
-          previousLabel='< previous'
-          renderOnZeroPageCount={null}
-        />
+        <div className='react-paginate-container'>
+          <ReactPaginate
+            breakLabel='...'
+            nextLabel='next >'
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={2}
+            pageCount={pageCount}
+            previousLabel='< previous'
+            renderOnZeroPageCount={null}
+            activeLinkClassName='active-page-item'
+            pageLinkClassName='page-link'
+            previousLinkClassName='previous-link'
+            nextLinkClassName='next-link'
+          />
+        </div>
       </main>
     </>
   );
