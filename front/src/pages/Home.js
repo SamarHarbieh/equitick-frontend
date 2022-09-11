@@ -63,6 +63,15 @@ const Home = () => {
     <>
       <Navbar />
       <main className='home-main-wrapper'>
+        <div className='filter-container'>
+          <form>
+            <label for='deal'>Deal</label>
+            <input id='deal' type='text' placeholder='Deal starts with ..' />
+            <label for='login'>Login</label>
+            <input id='deal' type='text' placeholder='Deal starts with ..' />
+            <button type='submit'>Filter</button>
+          </form>
+        </div>
         <h1>Trades</h1>
         <div className='table-container'>
           <table>
