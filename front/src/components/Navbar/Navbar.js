@@ -8,7 +8,7 @@ const Navbar = () => {
   return (
     <header>
       <nav>
-        <h2>Sky Blue Trades</h2>
+        <h2>Sky Blue Trading</h2>
         <div className='navbar-right'>
           {ctx.isLoggedIn && (
             <>

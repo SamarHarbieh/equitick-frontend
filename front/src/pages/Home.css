@@ -1,0 +1,32 @@
+.home-main-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: var(--tertiary-color);
+}
+
+.table-container {
+  width: 90%;
+  overflow-x: auto;
+}
+
+h1 {
+  padding: 0.5em;
+  font-size: 2.3rem;
+  margin: 1.5rem 1rem;
+}
+
+table {
+  width: 100%;
+}
+
+.table-header {
+  border: 1px solid red;
+  background-color: green;
+}
+
+tr {
+  border-bottom: 1px solid black;
+}

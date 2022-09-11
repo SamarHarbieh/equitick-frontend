@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Home from './pages/Home';
+import Loader from './components/Loader/Loader';
 import AuthContext from './store/auth-context';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const storeUsedLoggedInToken = localStorage.getItem('token');
@@ -46,7 +48,6 @@ const App = () => {
         'http://localhost:8000/api/logout',
         requestOptions
       );
-      console.log(response);
       if (response.status === 200) {
         localStorage.removeItem('token');
         localStorage.removeItem('name');
@@ -67,25 +68,27 @@ const App = () => {
           userEmail: userEmail,
           onLogin: loginHandler,
           onLogout: logoutHandler,
+          setIsLoading: setIsLoading,
+          isLoading: isLoading,
         }}
       >
-        <main>
-          <Routes>
-            <Route path='*' element={<main>PAGE NOT FOUND</main>} />
-            <Route
-              path='/'
-              element={
-                !isLoggedIn ? (
-                  <Login onLogin={loginHandler} />
-                ) : (
-                  <Home onLogout={logoutHandler} />
-                )
-              }
-            />
-            {/* <Route path='/' element={<Home />} /> */}
-            <Route path='/login' element={<Login />} />
-          </Routes>
-        </main>
+        {isLoading && <Loader />}
+
+        <Routes>
+          <Route path='*' element={<main>PAGE NOT FOUND</main>} />
+          <Route
+            path='/'
+            element={
+              !isLoggedIn ? (
+                <Login onLogin={loginHandler} />
+              ) : (
+                <Home onLogout={logoutHandler} />
+              )
+            }
+          />
+          {/* <Route path='/' element={<Home />} /> */}
+          <Route path='/login' element={<Login />} />
+        </Routes>
       </AuthContext.Provider>
     </BrowserRouter>
   );
