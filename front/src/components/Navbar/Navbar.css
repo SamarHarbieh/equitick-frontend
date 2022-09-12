@@ -5,6 +5,22 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--secondary-color);
+}
+
+header h2 {
+  margin: 1rem 0;
+}
+/* .nav-left-container h2 {
+  font-size: 2.4rem;
+} */
+
+header h3 {
+  font-size: 1.3rem;
+}
+
+.header-title-span {
+  color: var(--secondary-color);
 }
 nav {
   max-width: 88%;
@@ -26,15 +42,31 @@ nav h2 {
 
 .navbar-right {
   display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.avatar-container {
+  cursor: pointer;
 }
 
 .logout-btn {
   margin-left: 1.5rem;
-  padding: 1rem;
+  padding: 0.5rem 0.7rem;
   border: none;
-  text-decoration: underline;
+  text-decoration: none;
   text-underline-offset: 5px;
-  background-color: transparent;
-  color: white;
+  color: var(--secondary-color);
   font-family: var(--primary-color);
+  background-color: var(--secondary-color);
+  color: white;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logout-btn:hover {
+  color: white;
+  text-decoration: underline;
 }

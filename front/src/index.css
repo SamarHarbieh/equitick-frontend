@@ -2,8 +2,10 @@
 
 :root {
   --primary-font-family: 'Poppins', sans-serif;
-  --primary-color: #1d5191;
-  --secondary-color: #4993ee;
+  --primary-color: #05435a;
+  /* --secondary-color: #38c97e; */
+  --secondary-color: #099c4f;
+  /* --secondary-color: #15a185; */
   /* --tertiary-color: #040720; */
   --tertiary-color: #080d36;
 }

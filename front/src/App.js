@@ -7,29 +7,43 @@ import AuthContext from './store/auth-context';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userID, setUserID] = useState('');
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
+  const [isAdmin, setIsAdmin] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const storeUsedLoggedInToken = localStorage.getItem('token');
+    const storedUserLoggedInID = localStorage.getItem('userID');
     const storedUserLoggedInName = localStorage.getItem('name');
     const storedUserLoggedInEmail = localStorage.getItem('email');
+    const storedUserLoggedInIsAdmin = localStorage.getItem('isAdmin');
 
     if (storeUsedLoggedInToken) {
       setIsLoggedIn(true);
     }
+    if (storedUserLoggedInID) {
+      setUserID(storedUserLoggedInID);
+    }
+
     if (storedUserLoggedInName) {
       setUserName(storedUserLoggedInName);
     }
     if (storedUserLoggedInEmail) {
       setUserEmail(storedUserLoggedInEmail);
     }
+
+    if (storedUserLoggedInIsAdmin) {
+      setIsAdmin(storedUserLoggedInIsAdmin);
+    }
   }, []);
   const loginHandler = (data) => {
     localStorage.setItem('token', data.token);
     localStorage.setItem('name', data.user.name);
     localStorage.setItem('email', data.user.email);
+    localStorage.setItem('userID', data.user.id);
+    localStorage.setItem('isAdmin', data.user.isAdmin);
     setIsLoggedIn(true);
   };
 
@@ -52,6 +66,8 @@ const App = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('name');
         localStorage.removeItem('email');
+        localStorage.removeItem('userID');
+        localStorage.removeItem('isAdmin');
         setIsLoggedIn(false);
         return;
       }
@@ -64,8 +80,10 @@ const App = () => {
       <AuthContext.Provider
         value={{
           isLoggedIn: isLoggedIn,
+          userID: userID,
           userName: userName,
           userEmail: userEmail,
+          isAdmin: isAdmin,
           onLogin: loginHandler,
           onLogout: logoutHandler,
           setIsLoading: setIsLoading,

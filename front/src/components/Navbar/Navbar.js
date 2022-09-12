@@ -8,11 +8,18 @@ const Navbar = () => {
   return (
     <header>
       <nav>
-        <h2>Sky Blue Trading</h2>
+        <div className='nav-left-container'>
+          <h2>
+            Equitcks
+            <span className='header-title-span'>Trading</span>
+          </h2>
+          <h3>Welcome back</h3>
+        </div>
+
         <div className='navbar-right'>
           {ctx.isLoggedIn && (
             <>
-              <div>
+              <div className='avatar-container'>
                 <img src={AVATAR} alt='user' className='avatar' />
                 <h4 className='user-name'>{ctx.userName}</h4>
               </div>

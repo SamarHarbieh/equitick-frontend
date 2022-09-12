@@ -10,6 +10,7 @@
 .table-container {
   width: 90%;
   overflow-x: auto;
+  margin: 5rem 1rem 2rem 1rem;
 }
 
 h1 {
@@ -24,18 +25,20 @@ table {
 }
 
 th {
-  padding: 0.8rem;
-  font-size: 1.2rem;
+  padding: 1.15rem;
+  font-size: 1.25rem;
+  background-color: var(--secondary-color);
+  color: white;
 }
 
-table tr:nth-child(1) {
-  /* border-bottom: 1px solid var(--tertiary-color); */
-  box-shadow: 0px 0px 36px 15px rgba(155, 152, 152, 0.28);
+tr {
+  border-bottom: 1px solid #d3d3d3;
+  padding: 1rem;
 }
-
 td {
   text-align: center;
-  padding: 1rem 0;
+  padding: 1.5rem 0;
+  font-size: 1.15rem;
 }
 
 .react-paginate-container {
@@ -86,4 +89,40 @@ td {
 .previous-link:hover,
 .next-link:hover {
   color: var(--secondary-color);
+}
+
+input,
+select {
+  padding: 0.7rem;
+  border-radius: 5px;
+  outline: none;
+  border: 1px solid var(--secondary-color);
+  background-color: white;
+  margin: 1rem;
+}
+
+form button {
+  padding: 0.6rem 0.8rem;
+  border: none;
+  color: var(--secondary-color);
+  background-color: var(--secondary-color);
+  color: white;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+form button:hover {
+  color: white;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.add-and-search-forms-container {
+  margin: 2rem 2rem 0 2rem;
+}
+
+.search-form {
+  margin-top: 1.5rem;
 }

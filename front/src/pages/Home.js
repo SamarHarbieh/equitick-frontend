@@ -6,15 +6,23 @@ import Navbar from '../components/Navbar/Navbar';
 import './Home.css';
 
 const Home = () => {
-  const [currentItems, setCurrentItems] = useState(null);
+  const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [previousPageUrl, setPreviousPageUrl] = useState(null);
   const [nextPageUrl, setNextPageUrl] = useState(null);
-  // Here we use item offsets; we could also use page offsets
-  // following the API or data you're working with.
+  const [dealFilter, setDealFilter] = useState(null);
+  const [action, setAction] = useState(1);
+  const [entry, setEntry] = useState(0);
+  const [symbol, setSymbol] = useState('EURUSD-');
+  const [price, setPrice] = useState(0);
+  const [volume, setVolume] = useState(0);
+  const [profit, setProfit] = useState(0);
+
   const [itemOffset, setItemOffset] = useState(0);
   const ctx = useContext(AuthContext);
-  const fetchTrades = async (page) => {
+
+  // Function to fetch trades
+  const fetchTrades = async (page, queryParams = '') => {
     ctx.setIsLoading(true);
     const requestOptions = {};
     let token = localStorage.getItem('token')
@@ -28,8 +36,10 @@ const Home = () => {
 
     requestOptions.headers = headers;
 
-    let fetchURL;
-    fetchURL = `http://localhost:8000/api/trades?page=${page}`;
+    const fetchURL =
+      ctx.isAdmin === 1
+        ? `http://localhost:8000/api/trades?page=${page}&${queryParams}`
+        : `http://localhost:8000/api/trades?page=${page}&Login=${ctx.userID}&${queryParams}`;
 
     try {
       const response = await fetch(fetchURL, requestOptions);
@@ -38,8 +48,7 @@ const Home = () => {
       setPageCount(fetchedTrades.last_page);
       setPreviousPageUrl(fetchedTrades.prev_page_url);
       setNextPageUrl(fetchedTrades.next_page_url);
-      console.log(fetchedTrades.data);
-      ctx.setIsLoading(true);
+      ctx.setIsLoading(false);
     } catch (err) {
       alert(err.message);
       ctx.setIsLoading(false);
@@ -55,24 +64,172 @@ const Home = () => {
     return <Navigate to='/login' />;
   }
 
+  const actionChangeHandler = (event) => {
+    setAction(event.target.value);
+  };
+
+  const entryChangeHandler = (event) => {
+    setEntry(event.target.value);
+  };
+
+  const symbolChangeHandler = (event) => {
+    setSymbol(event.target.value);
+  };
+
+  const priceChangeHandler = (event) => {
+    setPrice(event.target.value);
+    if (event.target.value !== null && event.target.value.trim() !== '') {
+      setProfit(Math.floor(Math.random() * 201) - 100);
+    } else {
+      setProfit(0);
+    }
+  };
+
+  const volumeChangeHandler = (event) => {
+    setVolume(event.target.value);
+  };
+
+  const addDealHandler = async (event) => {
+    event.preventDefault();
+    const requestOptions = {
+      method: 'POST',
+      body: JSON.stringify({
+        Action: action,
+        Entry: entry,
+        Symbol: symbol,
+        Price: price,
+        Volume: volume,
+        Profit: profit,
+        Login: ctx.userID,
+      }),
+    };
+
+    let token = localStorage.getItem('token')
+      ? localStorage.getItem('token')
+      : null;
+
+    const headers = {
+      'Content-type': 'application/json; charset=UTF-8',
+
+      Authorization: `Bearer ${token}`,
+    };
+
+    requestOptions.headers = headers;
+
+    ctx.setIsLoading(true);
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/trades/`,
+        requestOptions
+      );
+      const data = await response.json();
+      if (response.status === 200) {
+        fetchTrades(1);
+        ctx.setIsLoading(false);
+        return;
+      }
+      if (response.status === 400) {
+        ctx.setIsLoading(false);
+        alert(data.message);
+        return;
+      }
+      if (response.status === 401) {
+        ctx.setIsLoading(false);
+        alert('Not Authorized to add!');
+        return;
+      }
+      if (response.status === 501) {
+        ctx.setIsLoading(false);
+        alert(data.message);
+      }
+    } catch (err) {
+      ctx.setIsLoading(false);
+      console.log(err);
+    }
+  };
+  const dealFilterChangeHandler = (event) => {
+    setDealFilter(event.target.value);
+  };
+
   const handlePageClick = (event) => {
     fetchTrades(event.selected + 1);
+  };
+
+  const handleFilterClick = (event) => {
+    event.preventDefault();
+    if (dealFilter) {
+      fetchTrades();
+    }
   };
 
   return (
     <>
       <Navbar />
       <main className='home-main-wrapper'>
-        <div className='filter-container'>
-          <form>
-            <label for='deal'>Deal</label>
-            <input id='deal' type='text' placeholder='Deal starts with ..' />
-            <label for='login'>Login</label>
-            <input id='deal' type='text' placeholder='Deal starts with ..' />
-            <button type='submit'>Filter</button>
+        <div className='add-and-search-forms-container'>
+          <form className='add-form'>
+            <label for='action'>Action</label>
+            <select name='action' id='action' onChange={actionChangeHandler}>
+              <option value='1'>BUY</option>
+              <option value='0'>SELL</option>
+            </select>
+            <label for='entry'>Entry</label>
+            <input
+              type='number'
+              id='entry'
+              name='entry'
+              onChange={entryChangeHandler}
+            />
+            <label for='symbol'>Symbol</label>
+            <select name='symbol' id='symbol' onChange={symbolChangeHandler}>
+              <option value='EURUSD-'>EURUSD-</option>
+              <option value='DAX30_Z18'>DAX30_Z18</option>
+              <option value='DJ18DEC'>DJ18DEC</option>
+            </select>
+            <label for='price'>Price</label>
+            <input
+              type='number'
+              id='price'
+              name='price'
+              onChange={priceChangeHandler}
+              required
+            />
+            <label for='volume'>Volume</label>
+            <input type='number' id='volume' name='volume' />
+            <label for='profit'>Profit</label>
+            <input
+              type='number'
+              id='profit'
+              name='profit'
+              value={profit}
+              disabled
+              style={{
+                color:
+                  profit > 0
+                    ? 'green'
+                    : profit < 0
+                    ? 'red'
+                    : 'var(--tertiary-color)',
+              }}
+            />
+            <button type='submit' onClick={addDealHandler}>
+              DEAL
+            </button>
+          </form>
+          <form className='search-form'>
+            <label for='deal'>Filter trades by deal</label>
+            <input
+              id='deal'
+              type='text'
+              placeholder='Deals starting with ..'
+              onChange={dealFilterChangeHandler}
+            />
+            <button type='submit' onClick={handleFilterClick}>
+              FILTER
+            </button>
           </form>
         </div>
-        <h1>Trades</h1>
+        {/* <h1>Trades</h1> */}
         <div className='table-container'>
           <table>
             <thead>
@@ -102,9 +259,9 @@ const Home = () => {
                     style={{
                       color:
                         item.Profit > 0
-                          ? '#004D00'
+                          ? 'green'
                           : item.Profit < 0
-                          ? '#F70000'
+                          ? 'red'
                           : 'var(--tertiary-color)',
                     }}
                   >
