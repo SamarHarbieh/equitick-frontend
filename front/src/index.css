@@ -2,11 +2,8 @@
 
 :root {
   --primary-font-family: 'Poppins', sans-serif;
-  --primary-color: #05435a;
-  /* --secondary-color: #38c97e; */
+  --primary-color: rgb(5, 67, 90);
   --secondary-color: #099c4f;
-  /* --secondary-color: #15a185; */
-  /* --tertiary-color: #040720; */
   --tertiary-color: #080d36;
 }
 * {
@@ -18,4 +15,10 @@
 html {
   font-family: var(--primary-font-family);
   overflow-x: hidden;
+  width: 100vw;
+}
+
+body {
+  width: 100vw;
+  height: auto;
 }

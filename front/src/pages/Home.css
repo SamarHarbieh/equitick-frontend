@@ -101,22 +101,29 @@ select {
   margin: 1rem;
 }
 
-form button {
-  padding: 0.6rem 0.8rem;
+form button,
+.all-trades-btn {
   border: none;
   color: var(--secondary-color);
   background-color: var(--secondary-color);
   color: white;
   border-radius: 5px;
-  font-size: 0.9rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s;
+  padding: 0.7rem 1.3rem;
 }
 
-form button:hover {
-  color: white;
+form button:hover,
+.all-trades-btn:hover {
+  /* color: white;
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: 3px; */
+  color: var(--tertiary-color);
+}
+
+.all-trades-btn {
+  margin-left: 1rem;
 }
 
 .add-and-search-forms-container {
@@ -125,4 +132,12 @@ form button:hover {
 
 .search-form {
   margin-top: 1.5rem;
+}
+
+button:disabled,
+button[disabled] {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+  pointer-events: none;
 }

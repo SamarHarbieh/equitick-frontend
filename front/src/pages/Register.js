@@ -1,50 +1,61 @@
 import { Fragment, useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
 import React from 'react';
 import AuthContext from '../store/auth-context';
 import { useNavigate } from 'react-router-dom';
-import './Login.css';
+import './Register.css';
 
-const Login = () => {
+const Register = () => {
   const ctx = useContext(AuthContext);
-
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [invalidCredentialsMessage, setInvalidCredentialsMessage] =
-    useState('');
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const navigate = useNavigate();
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    if (!name || !email || !password || !passwordConfirmation) {
+      setErrorMessage('Please enter all required fields');
+      return;
+    }
     const requestOptions = {
       method: 'POST',
       headers: {
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email: email, password: password }),
+      body: JSON.stringify({
+        email: email,
+        password: password,
+        password_confirmation: passwordConfirmation,
+        name: name,
+      }),
     };
 
     let errorSent = false;
     try {
       const response = await fetch(
-        'http://localhost:8000/api/login',
+        'http://localhost:8000/api/register',
         requestOptions
       );
       const data = await response.json();
 
       if (response.status === 201) {
+        console.log(data);
         ctx.onLogin(data);
         navigate('/', { replace: true });
-      } else {
-        //if invalid credentials
-        if (response.status === 401) {
-          setInvalidCredentialsMessage(data.message);
-          errorSent = false;
+        return;
+      }
+      if (response.status === 422) {
+        if (data.errors) {
+          setErrorMessage(Object.values(data.errors)[0][0]);
         }
+        return;
       }
     } catch (err) {
-      console.error(err);
+      console.log(err);
       if (!errorSent) {
         alert('Server is currently unavailable');
       }
@@ -53,18 +64,30 @@ const Login = () => {
   return (
     <Fragment>
       <div className='container-page'>
-        <h1 className='login-register-title'>Login</h1>
+        <h1 className='login-register-title'>Register</h1>
         <div className='login-register-form'>
           <form
             className='login-register-form-container'
             action=''
             onSubmit={submitHandler}
           >
-            {invalidCredentialsMessage && (
-              <div className='invalid-credentials-div'>
-                {invalidCredentialsMessage}
-              </div>
+            {errorMessage && (
+              <div className='invalid-credentials-div'>{errorMessage}</div>
             )}
+            <div className='register-name-section'>
+              <label htmlFor='name'></label>
+              <input
+                className='login-input-one'
+                required
+                placeholder='Your name'
+                type='text'
+                id='name'
+                name='name'
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
+              />
+            </div>
             <div className='login-email-section'>
               <label htmlFor='Email'></label>
               <input
@@ -80,27 +103,36 @@ const Login = () => {
               />
             </div>
             <div className='login-password-section'>
-              <label htmlFor='Password'></label>
+              <label htmlFor='password'></label>
               <input
                 className='login-input-two'
                 required
                 placeholder='Password'
                 type='password'
-                id='Password'
-                name='Password'
+                id='password'
+                name='password'
                 onChange={(e) => {
                   setPassword(e.target.value);
                 }}
               />
             </div>
-            <button className='login-register-button' type='submit'>
-              Log in
-            </button>
-            <div className='register-link-container'>
-              <Link to='/register' style={{ color: 'var(--secondary-color)' }}>
-                Register now
-              </Link>
+            <div className='login-password-confirmation-section'>
+              <label htmlFor='password_confirmation'></label>
+              <input
+                className='login-input-two'
+                required
+                placeholder='Confirm your password'
+                type='password'
+                id='password_confirmation'
+                name='password_confirmation'
+                onChange={(e) => {
+                  setPasswordConfirmation(e.target.value);
+                }}
+              />
             </div>
+            <button className='login-register-button' type='submit'>
+              Register
+            </button>
           </form>
         </div>
       </div>
@@ -108,4 +140,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

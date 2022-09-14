@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Home from './pages/Home';
 import Loader from './components/Loader/Loader';
+import PopupMessage from './components/PopupMessage/PopupMessage';
+import Register from './pages/Register';
 import AuthContext from './store/auth-context';
 
 const App = () => {
@@ -12,6 +14,8 @@ const App = () => {
   const [userEmail, setUserEmail] = useState('');
   const [isAdmin, setIsAdmin] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [openPopup, setOpenPopup] = useState(false);
+  const [popupContent, setPopupContent] = useState('');
 
   useEffect(() => {
     const storeUsedLoggedInToken = localStorage.getItem('token');
@@ -45,6 +49,10 @@ const App = () => {
     localStorage.setItem('userID', data.user.id);
     localStorage.setItem('isAdmin', data.user.isAdmin);
     setIsLoggedIn(true);
+    setUserID(data.user.id);
+    setUserName(data.user.name);
+    setUserEmail(data.user.email);
+    setUserEmail(data.user.email);
   };
 
   const logoutHandler = async () => {
@@ -75,6 +83,7 @@ const App = () => {
       console.log(err);
     }
   };
+
   return (
     <BrowserRouter>
       <AuthContext.Provider
@@ -87,10 +96,14 @@ const App = () => {
           onLogin: loginHandler,
           onLogout: logoutHandler,
           setIsLoading: setIsLoading,
+          setOpenPopup: setOpenPopup,
+          setPopupContent: setPopupContent,
           isLoading: isLoading,
+          openPopup: openPopup,
         }}
       >
         {isLoading && <Loader />}
+        {openPopup && <PopupMessage message={popupContent} />}
 
         <Routes>
           <Route path='*' element={<main>PAGE NOT FOUND</main>} />
@@ -104,8 +117,11 @@ const App = () => {
               )
             }
           />
-          {/* <Route path='/' element={<Home />} /> */}
-          <Route path='/login' element={<Login />} />
+          <Route path='/login' element={isLoggedIn ? <Home /> : <Login />} />
+          <Route
+            path='/register'
+            element={isLoggedIn ? <Home /> : <Register />}
+          />
         </Routes>
       </AuthContext.Provider>
     </BrowserRouter>

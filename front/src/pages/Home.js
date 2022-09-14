@@ -18,7 +18,6 @@ const Home = () => {
   const [volume, setVolume] = useState(0);
   const [profit, setProfit] = useState(0);
 
-  const [itemOffset, setItemOffset] = useState(0);
   const ctx = useContext(AuthContext);
 
   // Function to fetch trades
@@ -31,6 +30,7 @@ const Home = () => {
 
     const headers = {
       'Content-Type': 'application/json',
+      Accept: 'application/json',
       Authorization: `Bearer ${token}`,
     };
 
@@ -40,7 +40,6 @@ const Home = () => {
       ctx.isAdmin === 1
         ? `http://localhost:8000/api/trades?page=${page}&${queryParams}`
         : `http://localhost:8000/api/trades?page=${page}&Login=${ctx.userID}&${queryParams}`;
-
     try {
       const response = await fetch(fetchURL, requestOptions);
       const fetchedTrades = await response.json();
@@ -91,6 +90,11 @@ const Home = () => {
 
   const addDealHandler = async (event) => {
     event.preventDefault();
+    if (!price || price === 0) {
+      ctx.setOpenPopup(true);
+      ctx.setPopupContent('Price field is required');
+      return;
+    }
     const requestOptions = {
       method: 'POST',
       body: JSON.stringify({
@@ -123,9 +127,14 @@ const Home = () => {
         requestOptions
       );
       const data = await response.json();
-      if (response.status === 200) {
+      if (response.status === 201) {
         fetchTrades(1);
-        ctx.setIsLoading(false);
+        setAction(1);
+        setEntry(0);
+        setPrice(0);
+        setProfit(0);
+        setSymbol('EURUSD-');
+        setVolume(0);
         return;
       }
       if (response.status === 400) {
@@ -138,10 +147,6 @@ const Home = () => {
         alert('Not Authorized to add!');
         return;
       }
-      if (response.status === 501) {
-        ctx.setIsLoading(false);
-        alert(data.message);
-      }
     } catch (err) {
       ctx.setIsLoading(false);
       console.log(err);
@@ -149,6 +154,9 @@ const Home = () => {
   };
   const dealFilterChangeHandler = (event) => {
     setDealFilter(event.target.value);
+    if (event.target.value === null || event.target.value.trim() === '') {
+      fetchTrades(1);
+    }
   };
 
   const handlePageClick = (event) => {
@@ -157,11 +165,10 @@ const Home = () => {
 
   const handleFilterClick = (event) => {
     event.preventDefault();
-    if (dealFilter) {
-      fetchTrades();
+    if (dealFilter && dealFilter.trim() !== '' && dealFilter.trim() !== null) {
+      fetchTrades(1, `Deal=${dealFilter}`);
     }
   };
-
   return (
     <>
       <Navbar />
@@ -169,7 +176,12 @@ const Home = () => {
         <div className='add-and-search-forms-container'>
           <form className='add-form'>
             <label for='action'>Action</label>
-            <select name='action' id='action' onChange={actionChangeHandler}>
+            <select
+              name='action'
+              id='action'
+              onChange={actionChangeHandler}
+              defaultValue={action}
+            >
               <option value='1'>BUY</option>
               <option value='0'>SELL</option>
             </select>
@@ -179,6 +191,7 @@ const Home = () => {
               id='entry'
               name='entry'
               onChange={entryChangeHandler}
+              value={entry}
             />
             <label for='symbol'>Symbol</label>
             <select name='symbol' id='symbol' onChange={symbolChangeHandler}>
@@ -191,11 +204,18 @@ const Home = () => {
               type='number'
               id='price'
               name='price'
+              value={price}
               onChange={priceChangeHandler}
               required
             />
             <label for='volume'>Volume</label>
-            <input type='number' id='volume' name='volume' />
+            <input
+              type='number'
+              id='volume'
+              name='volume'
+              onChange={volumeChangeHandler}
+              value={volume}
+            />
             <label for='profit'>Profit</label>
             <input
               type='number'
@@ -229,7 +249,6 @@ const Home = () => {
             </button>
           </form>
         </div>
-        {/* <h1>Trades</h1> */}
         <div className='table-container'>
           <table>
             <thead>

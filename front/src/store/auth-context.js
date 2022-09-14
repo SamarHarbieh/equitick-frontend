@@ -7,6 +7,8 @@ const AuthContext = React.createContext({
   userEmail: '',
   isAdmin: '',
   isLoading: false,
+  openPopup: false,
+  popupMessage: '',
 });
 
 export default AuthContext;
