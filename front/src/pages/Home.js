@@ -4,8 +4,15 @@ import ReactPaginate from 'react-paginate';
 import AuthContext from '../store/auth-context';
 import Navbar from '../components/Navbar/Navbar';
 import './Home.css';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+  const navigate = useNavigate();
+  const ctx = useContext(AuthContext);
+  if (!ctx.isLoggedIn) {
+    navigate('/login', { replace: true });
+  }
+
   const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [previousPageUrl, setPreviousPageUrl] = useState(null);
@@ -17,8 +24,6 @@ const Home = () => {
   const [price, setPrice] = useState(0);
   const [volume, setVolume] = useState(0);
   const [profit, setProfit] = useState(0);
-
-  const ctx = useContext(AuthContext);
 
   // Function to fetch trades
   const fetchTrades = async (page, queryParams = '') => {
@@ -175,7 +180,7 @@ const Home = () => {
       <main className='home-main-wrapper'>
         <div className='add-and-search-forms-container'>
           <form className='add-form'>
-            <label for='action'>Action</label>
+            <label htmlFor='action'>Action</label>
             <select
               name='action'
               id='action'
@@ -185,7 +190,7 @@ const Home = () => {
               <option value='1'>BUY</option>
               <option value='0'>SELL</option>
             </select>
-            <label for='entry'>Entry</label>
+            <label htmlFor='entry'>Entry</label>
             <input
               type='number'
               id='entry'
@@ -193,13 +198,13 @@ const Home = () => {
               onChange={entryChangeHandler}
               value={entry}
             />
-            <label for='symbol'>Symbol</label>
+            <label htmlFor='symbol'>Symbol</label>
             <select name='symbol' id='symbol' onChange={symbolChangeHandler}>
               <option value='EURUSD-'>EURUSD-</option>
               <option value='DAX30_Z18'>DAX30_Z18</option>
               <option value='DJ18DEC'>DJ18DEC</option>
             </select>
-            <label for='price'>Price</label>
+            <label htmlFor='price'>Price</label>
             <input
               type='number'
               id='price'
@@ -208,7 +213,7 @@ const Home = () => {
               onChange={priceChangeHandler}
               required
             />
-            <label for='volume'>Volume</label>
+            <label htmlFor='volume'>Volume</label>
             <input
               type='number'
               id='volume'
@@ -216,7 +221,7 @@ const Home = () => {
               onChange={volumeChangeHandler}
               value={volume}
             />
-            <label for='profit'>Profit</label>
+            <label htmlFor='profit'>Profit</label>
             <input
               type='number'
               id='profit'
@@ -237,7 +242,7 @@ const Home = () => {
             </button>
           </form>
           <form className='search-form'>
-            <label for='deal'>Filter trades by deal</label>
+            <label htmlFor='deal'>Filter trades by deal</label>
             <input
               id='deal'
               type='text'

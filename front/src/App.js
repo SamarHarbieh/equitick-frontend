@@ -107,7 +107,7 @@ const App = () => {
 
         <Routes>
           <Route path='*' element={<main>PAGE NOT FOUND</main>} />
-          <Route
+          {/* <Route
             path='/'
             element={
               !isLoggedIn ? (
@@ -116,12 +116,10 @@ const App = () => {
                 <Home onLogout={logoutHandler} />
               )
             }
-          />
-          <Route path='/login' element={isLoggedIn ? <Home /> : <Login />} />
-          <Route
-            path='/register'
-            element={isLoggedIn ? <Home /> : <Register />}
-          />
+          /> */}
+          <Route path='/' element={<Home />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
         </Routes>
       </AuthContext.Provider>
     </BrowserRouter>

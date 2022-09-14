@@ -1,18 +1,20 @@
 import { Fragment, useContext, useState } from 'react';
 import React from 'react';
 import AuthContext from '../store/auth-context';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import './Register.css';
 
 const Register = () => {
+  const navigate = useNavigate();
   const ctx = useContext(AuthContext);
+  if (ctx.isLoggedIn) {
+    navigate('/', { replace: true });
+  }
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
-  const navigate = useNavigate();
 
   const submitHandler = async (e) => {
     e.preventDefault();
