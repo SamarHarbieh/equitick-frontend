@@ -12,7 +12,7 @@ When an ADMIN is logged in, they can see the list of trades of all users and fil
 ### Setup
 
 - clone the repository
-- switch to the development branch
+- switch to the production branch
 - run npm install
 
 #### Run the project
