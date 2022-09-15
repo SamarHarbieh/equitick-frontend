@@ -1,0 +1,165 @@
+.home-main-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: var(--tertiary-color);
+}
+
+.table-container {
+  width: 90%;
+  overflow-x: auto;
+  margin: 5rem 1rem 2rem 1rem;
+}
+
+h1 {
+  padding: 0.5em;
+  font-size: 2.3rem;
+  margin: 1.5rem 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  padding: 1.15rem;
+  font-size: 1.25rem;
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+tr {
+  border-bottom: 1px solid #d3d3d3;
+  padding: 1rem;
+}
+td {
+  text-align: center;
+  padding: 1.5rem 0;
+  font-size: 1.15rem;
+}
+
+.react-paginate-container {
+  margin: 1.5rem 0;
+  min-width: 700px;
+  /* background-color: var(--secondary-color); */
+  color: var(--tertiary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  height: 75px;
+}
+
+.react-paginate-container ul {
+  display: flex;
+  list-style: none;
+}
+
+.react-paginate-container ul li {
+  margin: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-self: center;
+  justify-content: center;
+}
+
+.page-link {
+  padding: 6px 12px;
+}
+
+.page-link:hover {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.active-page-item {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.previous-link,
+.next-link {
+  transition: all 0.2s;
+}
+
+.previous-link:hover,
+.next-link:hover {
+  color: var(--secondary-color);
+}
+
+input,
+select {
+  padding: 0.7rem;
+  border-radius: 5px;
+  outline: none;
+  border: 1px solid var(--secondary-color);
+  background-color: white;
+  margin: 1rem;
+}
+
+form button,
+.all-trades-btn {
+  border: none;
+  color: var(--secondary-color);
+  background-color: var(--secondary-color);
+  color: white;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0.7rem 1.3rem;
+}
+
+form button:hover,
+.all-trades-btn:hover {
+  /* color: white;
+  text-decoration: underline;
+  text-underline-offset: 3px; */
+  color: var(--tertiary-color);
+}
+
+.all-trades-btn {
+  margin-left: 1rem;
+}
+
+.add-and-search-forms-container {
+  margin: 2rem 2rem 0 2rem;
+}
+
+.search-form {
+  margin-top: 1.5rem;
+}
+
+button:disabled,
+button[disabled] {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+  pointer-events: none;
+}
+
+@media screen and (max-width: 768px) {
+  .react-paginate-container {
+    min-width: 500px;
+    max-width: 97%;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .react-paginate-container {
+    min-width: unset;
+  }
+  .react-paginate-container ul {
+    flex-wrap: wrap;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  html {
+    font-size: 12px;
+  }
+}
