@@ -1,15 +1,12 @@
-import { Fragment, useContext, useState } from 'react';
+import { Fragment, useContext, useState, useEffect } from 'react';
 import React from 'react';
 import AuthContext from '../store/auth-context';
 import { useNavigate, Navigate } from 'react-router-dom';
 import './Register.css';
 
 const Register = () => {
-  const navigate = useNavigate();
   const ctx = useContext(AuthContext);
-  if (ctx.isLoggedIn) {
-    navigate('/', { replace: true });
-  }
+  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -45,7 +42,6 @@ const Register = () => {
       const data = await response.json();
 
       if (response.status === 201) {
-        console.log(data);
         ctx.onLogin(data);
         navigate('/', { replace: true });
         return;
@@ -63,6 +59,11 @@ const Register = () => {
       }
     }
   };
+  useEffect(() => {
+    if (ctx.isLoggedIn) {
+      <Navigate to='/' replace={true} />;
+    }
+  }, []);
   return (
     <Fragment>
       <div className='container-page'>

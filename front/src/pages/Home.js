@@ -61,7 +61,9 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchTrades(1);
+    if (ctx.isLoggedIn) {
+      fetchTrades(1);
+    }
   }, []);
 
   if (ctx.isLoggedIn === false) {
@@ -97,7 +99,7 @@ const Home = () => {
     event.preventDefault();
     if (!price || price === 0) {
       ctx.setOpenPopup(true);
-      ctx.setPopupContent('Price field is required');
+      ctx.setPopupContent('Price needs to be set');
       return;
     }
     const requestOptions = {
@@ -179,68 +181,76 @@ const Home = () => {
       <Navbar />
       <main className='home-main-wrapper'>
         <div className='add-and-search-forms-container'>
-          <form className='add-form'>
-            <label htmlFor='action'>Action</label>
-            <select
-              name='action'
-              id='action'
-              onChange={actionChangeHandler}
-              defaultValue={action}
-            >
-              <option value='1'>BUY</option>
-              <option value='0'>SELL</option>
-            </select>
-            <label htmlFor='entry'>Entry</label>
-            <input
-              type='number'
-              id='entry'
-              name='entry'
-              onChange={entryChangeHandler}
-              value={entry}
-            />
-            <label htmlFor='symbol'>Symbol</label>
-            <select name='symbol' id='symbol' onChange={symbolChangeHandler}>
-              <option value='EURUSD-'>EURUSD-</option>
-              <option value='DAX30_Z18'>DAX30_Z18</option>
-              <option value='DJ18DEC'>DJ18DEC</option>
-            </select>
-            <label htmlFor='price'>Price</label>
-            <input
-              type='number'
-              id='price'
-              name='price'
-              value={price}
-              onChange={priceChangeHandler}
-              required
-            />
-            <label htmlFor='volume'>Volume</label>
-            <input
-              type='number'
-              id='volume'
-              name='volume'
-              onChange={volumeChangeHandler}
-              value={volume}
-            />
-            <label htmlFor='profit'>Profit</label>
-            <input
-              type='number'
-              id='profit'
-              name='profit'
-              value={profit}
-              disabled
-              style={{
-                color:
-                  profit > 0
-                    ? 'green'
-                    : profit < 0
-                    ? 'red'
-                    : 'var(--tertiary-color)',
-              }}
-            />
-            <button type='submit' onClick={addDealHandler}>
-              DEAL
-            </button>
-          </form>
+          {ctx.isAdmin === 0 && (
+            <>
+              <form className='add-form'>
+                <label htmlFor='action'>Action</label>
+                <select
+                  name='action'
+                  id='action'
+                  onChange={actionChangeHandler}
+                  defaultValue={action}
+                >
+                  <option value='1'>BUY</option>
+                  <option value='0'>SELL</option>
+                </select>
+                <label htmlFor='entry'>Entry</label>
+                <input
+                  type='number'
+                  id='entry'
+                  name='entry'
+                  onChange={entryChangeHandler}
+                  value={entry}
+                />
+                <label htmlFor='symbol'>Symbol</label>
+                <select
+                  name='symbol'
+                  id='symbol'
+                  onChange={symbolChangeHandler}
+                >
+                  <option value='EURUSD-'>EURUSD-</option>
+                  <option value='DAX30_Z18'>DAX30_Z18</option>
+                  <option value='DJ18DEC'>DJ18DEC</option>
+                </select>
+                <label htmlFor='price'>Price</label>
+                <input
+                  type='number'
+                  id='price'
+                  name='price'
+                  value={price}
+                  onChange={priceChangeHandler}
+                  required
+                />
+                <label htmlFor='volume'>Volume</label>
+                <input
+                  type='number'
+                  id='volume'
+                  name='volume'
+                  onChange={volumeChangeHandler}
+                  value={volume}
+                />
+                <label htmlFor='profit'>Profit</label>
+                <input
+                  type='number'
+                  id='profit'
+                  name='profit'
+                  value={profit}
+                  disabled
+                  style={{
+                    color:
+                      profit > 0
+                        ? 'green'
+                        : profit < 0
+                        ? 'red'
+                        : 'var(--tertiary-color)',
+                  }}
+                />
+                <button type='submit' onClick={addDealHandler}>
+                  DEAL
+                </button>
+              </form>
+            </>
+          )}
           <form className='search-form'>
             <label htmlFor='deal'>Filter trades by deal</label>
             <input
@@ -269,31 +279,33 @@ const Home = () => {
                 <th>Volume</th>
               </tr>
             </thead>
-            {currentItems &&
-              currentItems.map((item) => (
-                <tr key={item.Deal}>
-                  <td>{item.Deal}</td>
-                  <td>{item.Login}</td>
-                  <td>{item.Action}</td>
-                  <td>{item.Entry}</td>
-                  <td>{item.Time}</td>
-                  <td>{item.Symbol}</td>
-                  <td>{item.Price}</td>
-                  <td
-                    style={{
-                      color:
-                        item.Profit > 0
-                          ? 'green'
-                          : item.Profit < 0
-                          ? 'red'
-                          : 'var(--tertiary-color)',
-                    }}
-                  >
-                    {item.Profit}
-                  </td>
-                  <td>{item.Volume}</td>
-                </tr>
-              ))}
+            <tbody>
+              {currentItems &&
+                currentItems.map((item) => (
+                  <tr key={item.Deal}>
+                    <td>{item.Deal}</td>
+                    <td>{item.Login}</td>
+                    <td>{item.Action}</td>
+                    <td>{item.Entry}</td>
+                    <td>{item.Time}</td>
+                    <td>{item.Symbol}</td>
+                    <td>{item.Price}</td>
+                    <td
+                      style={{
+                        color:
+                          item.Profit > 0
+                            ? 'green'
+                            : item.Profit < 0
+                            ? 'red'
+                            : 'var(--tertiary-color)',
+                      }}
+                    >
+                      {item.Profit}
+                    </td>
+                    <td>{item.Volume}</td>
+                  </tr>
+                ))}
+            </tbody>
           </table>
         </div>
         <div className='react-paginate-container'>

@@ -141,3 +141,25 @@ button[disabled] {
   color: #666666;
   pointer-events: none;
 }
+
+@media screen and (max-width: 768px) {
+  .react-paginate-container {
+    min-width: 500px;
+    max-width: 97%;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .react-paginate-container {
+    min-width: unset;
+  }
+  .react-paginate-container ul {
+    flex-wrap: wrap;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  html {
+    font-size: 12px;
+  }
+}

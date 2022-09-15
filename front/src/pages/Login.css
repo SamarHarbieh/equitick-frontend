@@ -1,6 +1,6 @@
 .container-page {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   background-size: cover;
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
     url('../assets/bg2.jpg');
@@ -81,4 +81,25 @@
   align-items: center;
   justify-content: center;
   padding: 1rem;
+}
+
+@media screen and (max-width: 767px) {
+  .login-register-form {
+    width: 350px;
+    height: auto;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .login-register-form {
+    width: 300px;
+    height: auto;
+  }
+}
+
+@media screen and (max-width: 300px) {
+  .login-register-form {
+    width: 280px;
+    height: auto;
+  }
 }

@@ -1,4 +1,4 @@
-import { Fragment, useContext, useState } from 'react';
+import { Fragment, useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import React from 'react';
 import AuthContext from '../store/auth-context';
@@ -8,9 +8,6 @@ import './Login.css';
 const Login = () => {
   const navigate = useNavigate();
   const ctx = useContext(AuthContext);
-  if (ctx.isLoggedIn) {
-    navigate('/', { replace: true });
-  }
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -52,6 +49,13 @@ const Login = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (ctx.isLoggedIn) {
+      <Navigate to='/' replace={true} />;
+    }
+  }, []);
+
   return (
     <Fragment>
       <div className='container-page'>

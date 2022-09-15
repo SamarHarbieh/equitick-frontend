@@ -52,7 +52,7 @@ const App = () => {
     setUserID(data.user.id);
     setUserName(data.user.name);
     setUserEmail(data.user.email);
-    setUserEmail(data.user.email);
+    setIsAdmin(data.user.isAdmin);
   };
 
   const logoutHandler = async () => {
