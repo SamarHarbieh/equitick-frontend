@@ -167,8 +167,11 @@ const Home = () => {
   };
 
   const handlePageClick = (event) => {
+    if (dealFilter && dealFilter.trim() !== '' && dealFilter.trim() !== null) {
+      fetchTrades(event.selected + 1, `Deal=${dealFilter}`);
+    } else {
     fetchTrades(event.selected + 1);
-  };
+  }};
 
   const handleFilterClick = (event) => {
     event.preventDefault();
