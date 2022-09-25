@@ -18,6 +18,7 @@ const Home = () => {
   const [previousPageUrl, setPreviousPageUrl] = useState(null);
   const [nextPageUrl, setNextPageUrl] = useState(null);
   const [dealFilter, setDealFilter] = useState(null);
+  const [loginFilter, setLoginFilter] = useState(null);
   const [action, setAction] = useState(1);
   const [entry, setEntry] = useState(0);
   const [symbol, setSymbol] = useState('EURUSD-');
@@ -45,6 +46,8 @@ const Home = () => {
       ctx.isAdmin === 1
         ? `http://localhost:8000/api/trades?page=${page}&${queryParams}`
         : `http://localhost:8000/api/trades?page=${page}&Login=${ctx.userID}&${queryParams}`;
+
+        console.log(fetchURL);
     try {
       const response = await fetch(fetchURL, requestOptions);
       const fetchedTrades = await response.json();
@@ -166,18 +169,54 @@ const Home = () => {
     }
   };
 
+  const loginFilterChangeHandler = (event) => {
+    setLoginFilter(event.target.value);
+    // if (event.target.value === null || event.target.value.trim() === '') {
+    //   fetchTrades(1);
+    // }
+  };
+
   const handlePageClick = (event) => {
+    let queryParams = '';
+    //Check if there is a deal filter
     if (dealFilter && dealFilter.trim() !== '' && dealFilter.trim() !== null) {
-      fetchTrades(event.selected + 1, `Deal=${dealFilter}`);
-    } else {
+      // fetchTrades(1, `Deal=${dealFilter}`);
+      queryParams+=`Deal=${dealFilter}`;
+    }
+
+    //Check if there is a login filter
+    if(loginFilter && loginFilter.trim() !== '' && loginFilter.trim() !== null) {
+   
+    queryParams= queryParams==='' ? `Login=${loginFilter}` : queryParams+`&Login=${loginFilter}`;
+    }
+
+    if(queryParams!=='') {
+      fetchTrades(event.selected +1, queryParams);
+    }else {
     fetchTrades(event.selected + 1);
   }};
 
   const handleFilterClick = (event) => {
     event.preventDefault();
+     
+    let queryParams ='';
+   
+    //Check if there is a deal filter
     if (dealFilter && dealFilter.trim() !== '' && dealFilter.trim() !== null) {
-      fetchTrades(1, `Deal=${dealFilter}`);
+      // fetchTrades(1, `Deal=${dealFilter}`);
+      queryParams+=`Deal=${dealFilter}`;
     }
+
+    //Check if there is a login filter
+    if(loginFilter && loginFilter.trim() !== '' && loginFilter.trim() !== null) {
+   
+    queryParams= queryParams==='' ? `Login=${loginFilter}` : queryParams+`&Login=${loginFilter}`;
+    }
+
+    if(queryParams!=='') {
+      fetchTrades(1, queryParams);
+    }
+  
   };
   return (
     <>
@@ -255,13 +294,19 @@ const Home = () => {
             </>
           )}
           <form className='search-form'>
-            <label htmlFor='deal'>Filter trades by deal</label>
+            <label htmlFor='deal'>{ctx.isAdmin===1 ? 'Filter trades by deal and/or login' : 'Filter trades by deal'}</label>
             <input
               id='deal'
-              type='text'
+              type='number'
               placeholder='Deals starting with ..'
               onChange={dealFilterChangeHandler}
             />
+            {ctx.isAdmin ===1 && <>  <input
+              id='login'
+              type='number'
+              placeholder='Login starting with ..'
+              onChange={loginFilterChangeHandler}
+            /></>}
             <button type='submit' onClick={handleFilterClick}>
               FILTER
             </button>
