@@ -48,6 +48,8 @@ const Home = () => {
       ctx.isAdmin === 1
         ? `http://localhost:8000/api/trades?page=${page}&${queryParams}`
         : `http://localhost:8000/api/trades?page=${page}&Login=${ctx.userID}&${queryParams}`;
+
+        console.log(fetchURL);
       
     try {
       const response = await fetch(fetchURL, requestOptions);
@@ -161,8 +163,9 @@ const Home = () => {
         alert(data.message);
         return;
       }
-      if (response.status === 401) {
+      if (response.status == 401) {
         ctx.setIsLoading(false);
+        
         alert('Not Authorized to add!');
         return;
       }
@@ -190,14 +193,14 @@ const Home = () => {
     let queryParams = '';
     //Check if there is a deal filter
     if (dealFilter && dealFilter.trim() !== '' && dealFilter.trim() !== null) {
-      // fetchTrades(1, `Deal=${dealFilter}`);
-      queryParams+=`Deal=${dealFilter}`;
+      // fetchTrades(1, `Deal=${dealFilter}`);`
+      queryParams+=`DealFilter=${dealFilter}`;
     }
 
     //Check if there is a login filter
     if(loginFilter && loginFilter.trim() !== '' && loginFilter.trim() !== null) {
    
-    queryParams= queryParams==='' ? `Login=${loginFilter}` : queryParams+`&Login=${loginFilter}`;
+    queryParams= queryParams=='' ? `LoginFilter=${loginFilter}` : queryParams+`&LoginFilter=${loginFilter}`;
     }
 
     if(queryParams!=='') {
@@ -214,13 +217,13 @@ const Home = () => {
     //Check if there is a deal filter
     if (dealFilter && dealFilter.trim() !== '' && dealFilter.trim() !== null) {
       // fetchTrades(1, `Deal=${dealFilter}`);
-      queryParams+=`Deal=${dealFilter}`;
+      queryParams+=`DealFilter=${dealFilter}`;
     }
 
     //Check if there is a login filter
     if(loginFilter && loginFilter.trim() !== '' && loginFilter.trim() !== null) {
    
-    queryParams= queryParams==='' ? `Login=${loginFilter}` : queryParams+`&Login=${loginFilter}`;
+    queryParams= queryParams==='' ? `LoginFilter=${loginFilter}` : queryParams+`&LoginFilter=${loginFilter}`;
     }
 
     if(queryParams!=='') {
@@ -380,7 +383,7 @@ const Home = () => {
             pageLinkClassName='page-link'
             previousLinkClassName='previous-link'
             nextLinkClassName='next-link'
-            activeLink={currentPage}
+            active={currentPage}
           />
         </div>
       </main>
