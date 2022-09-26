@@ -1,7 +1,7 @@
 import { Fragment, useContext, useState, useEffect } from 'react';
 import React from 'react';
 import AuthContext from '../store/auth-context';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate, Link } from 'react-router-dom';
 import './Register.css';
 
 const Register = () => {
@@ -136,6 +136,11 @@ const Register = () => {
             <button className='login-register-button' type='submit'>
               Register
             </button>
+            <div className='register-link-container'>
+              <Link to='/login' style={{ color: 'var(--secondary-color)' }}>
+                Back to login
+              </Link>
+            </div>
           </form>
         </div>
       </div>

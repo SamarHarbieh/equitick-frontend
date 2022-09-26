@@ -51,12 +51,12 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(ctx.isLoggedIn);
-    if (ctx.isLoggedIn) {
-      <Navigate to='/' replace={true} />;
-    }
-  }, []);
+  // useEffect(() => {
+  //   console.log(ctx.isLoggedIn);
+  //   if (ctx.isLoggedIn) {
+  //     <Navigate to='/' replace={true} />;
+  //   }
+  // }, []);
 
   return (
     <Fragment>

@@ -29,6 +29,7 @@ const Home = () => {
 
   // Function to fetch trades
   const fetchTrades = async (page, queryParams = '') => {
+
     ctx.setIsLoading(true);
     const requestOptions = {};
     let token = localStorage.getItem('token')
@@ -58,7 +59,7 @@ const Home = () => {
       setCurrentPage(fetchedTrades.current_page);
       ctx.setIsLoading(false);
     } catch (err) {
-      alert(err.message);
+      console.log(err.message);
       ctx.setIsLoading(false);
     }
     ctx.setIsLoading(false);

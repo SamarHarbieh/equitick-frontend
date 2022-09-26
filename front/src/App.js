@@ -5,43 +5,50 @@ import Home from './pages/Home';
 import Loader from './components/Loader/Loader';
 import PopupMessage from './components/PopupMessage/PopupMessage';
 import Register from './pages/Register';
+import ProtectedRoutes from './components/ProtectedRoutes';
 import AuthContext from './store/auth-context';
+import { Navigate } from 'react-router-dom';
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('token' ? true : false));
-  const [userID, setUserID] = useState('');
-  const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
-  const [isAdmin, setIsAdmin] = useState(0);
+  
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('token') ? true : false);
+  const [userID, setUserID] = useState(localStorage.getItem('userID') ? localStorage.getItem('userID') : '');
+  const [userName, setUserName] = useState(localStorage.getItem('name') ? localStorage.getItem('name') : '');
+  const [userEmail, setUserEmail] = useState(localStorage.getItem('email') ? localStorage.getItem('email') : '');
+  const [isAdmin, setIsAdmin] = useState(localStorage.getItem('isAdmin') ? parseInt(localStorage.getItem('isAdmin')) : '');
   const [isLoading, setIsLoading] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
   const [popupContent, setPopupContent] = useState('');
 
   useEffect(() => {
-    const storeUsedLoggedInToken = localStorage.getItem('token');
-    const storedUserLoggedInID = localStorage.getItem('userID');
-    const storedUserLoggedInName = localStorage.getItem('name');
-    const storedUserLoggedInEmail = localStorage.getItem('email');
-    const storedUserLoggedInIsAdmin = parseInt(localStorage.getItem('isAdmin'));
+    //const storeUsedLoggedInToken = (localStorage.getItem('token'));
+    // const storedUserLoggedInID = localStorage.getItem('userID');
+    // const storedUserLoggedInName = localStorage.getItem('name');
+    // const storedUserLoggedInEmail = localStorage.getItem('email');
+    // const storedUserLoggedInIsAdmin = parseInt(localStorage.getItem('isAdmin'));
 
-    console.log(localStorage.getItem('token'));
-    if (storeUsedLoggedInToken) {
-      setIsLoggedIn(true);
-    }
-    if (storedUserLoggedInID) {
-      setUserID(storedUserLoggedInID);
-    }
 
-    if (storedUserLoggedInName) {
-      setUserName(storedUserLoggedInName);
-    }
-    if (storedUserLoggedInEmail) {
-      setUserEmail(storedUserLoggedInEmail);
-    }
+    // if (localStorage.getItem('token')) {
+    //   setIsLoggedIn(true);
+    // }
+    // if (storedUserLoggedInID) {
+    //   setUserID(storedUserLoggedInID);
+      
+    // }
 
-    if (storedUserLoggedInIsAdmin) {
-      setIsAdmin(storedUserLoggedInIsAdmin);
-    }
+    // if (storedUserLoggedInName) {
+    //   setUserName(storedUserLoggedInName);
+      
+    // }
+    // if (storedUserLoggedInEmail) {
+    //   setUserEmail(storedUserLoggedInEmail);
+
+    // }
+
+    // if (storedUserLoggedInIsAdmin) {
+    //   setIsAdmin(storedUserLoggedInIsAdmin);
+   
+    // }
 
   }, []);
   const loginHandler = (data) => {
@@ -67,7 +74,7 @@ const App = () => {
     };
     let token = localStorage.getItem('token');
     requestOptions.headers.Authorization = `Bearer ${token}`;
-console.log(requestOptions.headers);
+    setIsLoading(true);
     try {
       const response = await fetch(
         'http://localhost:8000/api/logout',
@@ -80,10 +87,12 @@ console.log(requestOptions.headers);
         localStorage.removeItem('userID');
         localStorage.removeItem('isAdmin');
         setIsLoggedIn(false);
+        setIsLoading(false);
         return;
       }
     } catch (err) {
       console.log(err);
+      setIsLoading(false);
     }
   };
 
@@ -121,8 +130,8 @@ console.log(requestOptions.headers);
             }
           />
           {/* <Route path='/' element={<Home />} /> */}
-          <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<Register />} />
+          <Route path='/login' element={isLoggedIn ? <Navigate to="/" /> : <Login />} />
+          <Route path='/register' element={isLoggedIn ? <Navigate to="/" /> : <Register />} />
         </Routes>
       </AuthContext.Provider>
     </BrowserRouter>
