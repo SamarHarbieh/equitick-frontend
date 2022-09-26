@@ -1,13 +1,13 @@
 import React from 'react';
 
 const AuthContext = React.createContext({
-  isLoggedIn: localStorage.getItem('isLoggedIn')
-    ? localStorage.getItem('isLoggedIn')
+  isLoggedIn: localStorage.getItem('token')
+    ? localStorage.getItem('token')
     : false,
   userID: '',
   userName: '',
   userEmail: '',
-  isAdmin: '',
+  isAdmin: 0,
   isLoading: false,
   openPopup: false,
   popupMessage: '',

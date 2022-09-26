@@ -14,6 +14,7 @@ const Home = () => {
   }
 
   const [currentItems, setCurrentItems] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
   const [pageCount, setPageCount] = useState(0);
   const [previousPageUrl, setPreviousPageUrl] = useState(null);
   const [nextPageUrl, setNextPageUrl] = useState(null);
@@ -46,8 +47,7 @@ const Home = () => {
       ctx.isAdmin === 1
         ? `http://localhost:8000/api/trades?page=${page}&${queryParams}`
         : `http://localhost:8000/api/trades?page=${page}&Login=${ctx.userID}&${queryParams}`;
-
-        console.log(fetchURL);
+      
     try {
       const response = await fetch(fetchURL, requestOptions);
       const fetchedTrades = await response.json();
@@ -55,6 +55,7 @@ const Home = () => {
       setPageCount(fetchedTrades.last_page);
       setPreviousPageUrl(fetchedTrades.prev_page_url);
       setNextPageUrl(fetchedTrades.next_page_url);
+      setCurrentPage(fetchedTrades.current_page);
       ctx.setIsLoading(false);
     } catch (err) {
       alert(err.message);
@@ -64,14 +65,21 @@ const Home = () => {
   };
 
   useEffect(() => {
+
     if (ctx.isLoggedIn) {
+      setDealFilter(null);
+      setLoginFilter(null);
       fetchTrades(1);
     }
-  }, []);
+    if (ctx.isLoggedIn === false) {
+      return <Navigate to='/login' />;
+    }
+  
+  }, [ctx.isLoggedIn]);
 
-  if (ctx.isLoggedIn === false) {
-    return <Navigate to='/login' />;
-  }
+  // if (ctx.isLoggedIn === false) {
+  //   return <Navigate to='/login' />;
+  // }
 
   const actionChangeHandler = (event) => {
     setAction(event.target.value);
@@ -164,9 +172,10 @@ const Home = () => {
   };
   const dealFilterChangeHandler = (event) => {
     setDealFilter(event.target.value);
-    if (event.target.value === null || event.target.value.trim() === '') {
-      fetchTrades(1);
-    }
+ 
+    // if (event.target.value === null || event.target.value.trim() === '') {
+    //   fetchTrades(1);
+    // }
   };
 
   const loginFilterChangeHandler = (event) => {
@@ -215,8 +224,9 @@ const Home = () => {
 
     if(queryParams!=='') {
       fetchTrades(1, queryParams);
+    } else {
+      fetchTrades(1);
     }
-  
   };
   return (
     <>
@@ -301,10 +311,10 @@ const Home = () => {
               placeholder='Deals starting with ..'
               onChange={dealFilterChangeHandler}
             />
-            {ctx.isAdmin ===1 && <>  <input
+            {ctx.isAdmin === 1 && <>  <input
               id='login'
               type='number'
-              placeholder='Login starting with ..'
+              placeholder='Logins starting with ..'
               onChange={loginFilterChangeHandler}
             /></>}
             <button type='submit' onClick={handleFilterClick}>
@@ -369,6 +379,7 @@ const Home = () => {
             pageLinkClassName='page-link'
             previousLinkClassName='previous-link'
             nextLinkClassName='next-link'
+            activeLink={currentPage}
           />
         </div>
       </main>

@@ -8,11 +8,11 @@ import Register from './pages/Register';
 import AuthContext from './store/auth-context';
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('token' ? true : false));
   const [userID, setUserID] = useState('');
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
-  const [isAdmin, setIsAdmin] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
   const [popupContent, setPopupContent] = useState('');
@@ -22,8 +22,9 @@ const App = () => {
     const storedUserLoggedInID = localStorage.getItem('userID');
     const storedUserLoggedInName = localStorage.getItem('name');
     const storedUserLoggedInEmail = localStorage.getItem('email');
-    const storedUserLoggedInIsAdmin = localStorage.getItem('isAdmin');
+    const storedUserLoggedInIsAdmin = parseInt(localStorage.getItem('isAdmin'));
 
+    console.log(localStorage.getItem('token'));
     if (storeUsedLoggedInToken) {
       setIsLoggedIn(true);
     }
@@ -41,6 +42,7 @@ const App = () => {
     if (storedUserLoggedInIsAdmin) {
       setIsAdmin(storedUserLoggedInIsAdmin);
     }
+
   }, []);
   const loginHandler = (data) => {
     localStorage.setItem('token', data.token);
@@ -60,11 +62,12 @@ const App = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Accept:'application/json',
       },
     };
     let token = localStorage.getItem('token');
     requestOptions.headers.Authorization = `Bearer ${token}`;
-
+console.log(requestOptions.headers);
     try {
       const response = await fetch(
         'http://localhost:8000/api/logout',
@@ -107,17 +110,17 @@ const App = () => {
 
         <Routes>
           <Route path='*' element={<main>PAGE NOT FOUND</main>} />
-          {/* <Route
+          <Route
             path='/'
             element={
               !isLoggedIn ? (
-                <Login onLogin={loginHandler} />
+                <Login/>
               ) : (
-                <Home onLogout={logoutHandler} />
+                <Home/>
               )
             }
-          /> */}
-          <Route path='/' element={<Home />} />
+          />
+          {/* <Route path='/' element={<Home />} /> */}
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
         </Routes>
