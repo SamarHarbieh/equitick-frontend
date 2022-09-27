@@ -30,7 +30,7 @@ const Home = () => {
   // Function to fetch trades
   const fetchTrades = async (page, queryParams = '') => {
 
-    ctx.setIsLoading(true);
+    // ctx.setIsLoading(true);
     const requestOptions = {};
     let token = localStorage.getItem('token')
       ? localStorage.getItem('token')
