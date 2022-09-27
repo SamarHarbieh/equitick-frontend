@@ -18,8 +18,7 @@ const Home = () => {
   const [pageCount, setPageCount] = useState(0);
   const [previousPageUrl, setPreviousPageUrl] = useState(null);
   const [nextPageUrl, setNextPageUrl] = useState(null);
-  const [dealFilter, setDealFilter] = useState(null);
-  const [loginFilter, setLoginFilter] = useState(null);
+  const [filter, setFilter] = useState(null);
   const [action, setAction] = useState(1);
   const [entry, setEntry] = useState(0);
   const [symbol, setSymbol] = useState('EURUSD-');
@@ -28,9 +27,8 @@ const Home = () => {
   const [profit, setProfit] = useState(0);
 
   // Function to fetch trades
-  const fetchTrades = async (page, queryParams = '') => {
-
-    // ctx.setIsLoading(true);
+  const fetchTrades = async (page, queryParam = '') => {
+    ctx.setIsLoading(true);
     const requestOptions = {};
     let token = localStorage.getItem('token')
       ? localStorage.getItem('token')
@@ -46,10 +44,8 @@ const Home = () => {
 
     const fetchURL =
       ctx.isAdmin === 1
-        ? `http://localhost:8000/api/trades?page=${page}&${queryParams}`
-        : `http://localhost:8000/api/trades?page=${page}&Login=${ctx.userID}&${queryParams}`;
-
-        console.log(fetchURL);
+        ? `http://localhost:8000/api/trades?page=${page}&${queryParam}`
+        : `http://localhost:8000/api/trades?page=${page}&Login=${ctx.userID}&${queryParam}`;
       
     try {
       const response = await fetch(fetchURL, requestOptions);
@@ -70,8 +66,7 @@ const Home = () => {
   useEffect(() => {
 
     if (ctx.isLoggedIn) {
-      setDealFilter(null);
-      setLoginFilter(null);
+      setFilter(null);
       fetchTrades(1);
     }
     if (ctx.isLoggedIn === false) {
@@ -174,37 +169,24 @@ const Home = () => {
       console.log(err);
     }
   };
-  const dealFilterChangeHandler = (event) => {
-    setDealFilter(event.target.value);
+  const filterChangeHandler = (event) => {
+    setFilter(event.target.value);
  
-    // if (event.target.value === null || event.target.value.trim() === '') {
-    //   fetchTrades(1);
-    // }
-  };
-
-  const loginFilterChangeHandler = (event) => {
-    setLoginFilter(event.target.value);
-    // if (event.target.value === null || event.target.value.trim() === '') {
-    //   fetchTrades(1);
-    // }
+    if (event.target.value === null || event.target.value.trim() === '') {
+      fetchTrades(1);
+    }
   };
 
   const handlePageClick = (event) => {
-    let queryParams = '';
-    //Check if there is a deal filter
-    if (dealFilter && dealFilter.trim() !== '' && dealFilter.trim() !== null) {
+    let queryParam = '';
+    //Check if search field is not empty
+    if (filter && filter.trim() !== '' && filter.trim() !== null) {
       // fetchTrades(1, `Deal=${dealFilter}`);`
-      queryParams+=`DealFilter=${dealFilter}`;
+      queryParam=`Filter=${filter}`;
     }
 
-    //Check if there is a login filter
-    if(loginFilter && loginFilter.trim() !== '' && loginFilter.trim() !== null) {
-   
-    queryParams= queryParams=='' ? `LoginFilter=${loginFilter}` : queryParams+`&LoginFilter=${loginFilter}`;
-    }
-
-    if(queryParams!=='') {
-      fetchTrades(event.selected +1, queryParams);
+    if(queryParam!=='') {
+      fetchTrades(event.selected +1, queryParam);
     }else {
     fetchTrades(event.selected + 1);
   }};
@@ -212,22 +194,16 @@ const Home = () => {
   const handleFilterClick = (event) => {
     event.preventDefault();
      
-    let queryParams ='';
+    let queryParam ='';
    
     //Check if there is a deal filter
-    if (dealFilter && dealFilter.trim() !== '' && dealFilter.trim() !== null) {
+    if (filter && filter.trim() !== '' && filter.trim() !== null) {
       // fetchTrades(1, `Deal=${dealFilter}`);
-      queryParams+=`DealFilter=${dealFilter}`;
+      queryParam=`Filter=${filter}`;
     }
 
-    //Check if there is a login filter
-    if(loginFilter && loginFilter.trim() !== '' && loginFilter.trim() !== null) {
-   
-    queryParams= queryParams==='' ? `LoginFilter=${loginFilter}` : queryParams+`&LoginFilter=${loginFilter}`;
-    }
-
-    if(queryParams!=='') {
-      fetchTrades(1, queryParams);
+    if(queryParam!=='') {
+      fetchTrades(1, queryParam);
     } else {
       fetchTrades(1);
     }
@@ -308,21 +284,15 @@ const Home = () => {
             </>
           )}
           <form className='search-form'>
-            <label htmlFor='deal'>{ctx.isAdmin===1 ? 'Filter trades by deal and/or login' : 'Filter trades by deal'}</label>
+            <label htmlFor='filter'>{ctx.isAdmin===1 ? 'Search by deal and/or login' : 'Search by deal'}</label>
             <input
-              id='deal'
+              id='filter'
               type='number'
-              placeholder='Deals starting with ..'
-              onChange={dealFilterChangeHandler}
+              placeholder='Containing...'
+              onChange={filterChangeHandler}
             />
-            {ctx.isAdmin === 1 && <>  <input
-              id='login'
-              type='number'
-              placeholder='Logins starting with ..'
-              onChange={loginFilterChangeHandler}
-            /></>}
             <button type='submit' onClick={handleFilterClick}>
-              FILTER
+              SEARCH
             </button>
           </form>
         </div>

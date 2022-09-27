@@ -6,7 +6,7 @@ Equiticks Financials
 
 Equiticks Financials is a project that allows user to register/login to the application, and will list all the trades of the logged in user. The logged in user can also add more trades(deals), and filter the trades by deal.
 
-When an ADMIN is logged in, they can see the list of trades of all users and filter them by deal number.
+When an ADMIN is logged in, he/she can see the list of trades of all users and filter them by deal and/or login.
 
 
 ### Setup
@@ -18,6 +18,7 @@ When an ADMIN is logged in, they can see the list of trades of all users and fil
 #### Run the project
 
 - run npm start
-- click on register to register a new user account
-- To create an ADMIN, go to postman and send a POST request http://localhost:8000/api/register . In the body include: name, email, password, password_confirmation, and isAdmin. Make sure to set isAdmin value to 1. Make sure to add Accept:application/json to the Headers as well.
+- To login as an ADMIN, use: email:admin@equiticks.com / password:123456
+- To register as a USER, use: email:user1@equiticks.com / password: 123456
+- You can also register for a new account
 
