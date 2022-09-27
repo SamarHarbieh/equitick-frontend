@@ -173,6 +173,7 @@ const Home = () => {
     setFilter(event.target.value);
  
     if (event.target.value === null || event.target.value.trim() === '') {
+      
       fetchTrades(1);
     }
   };
